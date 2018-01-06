@@ -31,6 +31,7 @@ export class LoopBackAuth {
   constructor(@Inject(InternalStorage) protected storage: InternalStorage) {
     this.token.id = this.load('id');
     this.token.user = this.load('user');
+    this.token.roles = this.load('roles');
     this.token.userId = this.load('userId');
     this.token.created = this.load('created');
     this.token.ttl = this.load('ttl');
@@ -105,6 +106,12 @@ export class LoopBackAuth {
   public getCurrentUserData(): any {
     return (typeof this.token.user === 'string') ? JSON.parse(this.token.user) : this.token.user;
   }
+
+  public getCurrentUserRoles(): string[] {
+    let rc = (typeof this.token.roles === 'string') ? JSON.parse(this.token.roles) : this.token.roles;
+    return rc ? rc : [];
+  }
+
   /**
    * @method save
    * @return {boolean} Whether or not the information was saved
@@ -117,6 +124,7 @@ export class LoopBackAuth {
       let expires = new Date(today.getTime() + (this.token.ttl * 1000));
       this.persist('id', this.token.id, expires);
       this.persist('user', this.token.user, expires);
+      this.persist('roles', this.token.roles, expires);
       this.persist('userId', this.token.userId, expires);
       this.persist('created', this.token.created, expires);
       this.persist('ttl', this.token.ttl, expires);
