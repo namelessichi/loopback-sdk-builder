@@ -107,10 +107,20 @@ export class LoopBackAuth {
     return (typeof this.token.user === 'string') ? JSON.parse(this.token.user) : this.token.user;
   }
 
+  // [+] >
   public getCurrentUserRoles(): string[] {
     let rc = (typeof this.token.roles === 'string') ? JSON.parse(this.token.roles) : this.token.roles;
     return rc ? rc : [];
   }
+
+  public userHasRoles(roles: string[]): boolean {
+    return this.getCurrentUserRoles().filter(role => roles.indexOf(role) !== -1).length != 0;
+  }
+
+  public userHasRole(role: string): boolean {
+    return this.userHasRoles([role]);
+  }
+  // < [+]
 
   /**
    * @method save
